@@ -1,14 +1,16 @@
 import { ChangeEvent, Component, ReactNode } from 'react';
 import { TopSection } from '../TopSection/TopSection';
 import { BottomSection } from '../BottomSection/BottomSection';
-import { StarshipData, StarWarsService } from '../../api/StarWarsService';
+import {
+  StarshipShortProperties,
+  StarWarsService,
+} from '../../api/StarWarsService';
 import styleSearchPage from './SearchPage.module.scss';
 const { main } = styleSearchPage;
 interface SearchPageState {
   inputResult: string;
   loading: boolean;
-  data: StarshipData | null;
-  searchQuery: string;
+  data: StarshipShortProperties[];
 }
 
 export class SearchPage extends Component<
@@ -18,43 +20,52 @@ export class SearchPage extends Component<
   state = {
     inputResult: '',
     loading: false,
-    data: null,
-    searchQuery: '',
+    data: [],
   };
 
-  starWarsService = new StarWarsService();
   async componentDidMount() {
-    const data = await this.starWarsService.getResponse();
-    this.setState((prevState) => {
-      return { loading: !prevState.loading };
+    const savedResult = localStorage.getItem('savedResult') ?? '';
+    this.setState({
+      inputResult: savedResult,
     });
+    await this.setStateResponse(savedResult);
+  }
+
+  setStateResponse = async (searchQuery: string) => {
+    this.setState({
+      loading: true,
+    });
+    const data = await StarWarsService.getResponse(searchQuery);
     if (data) {
       this.setState({
         data: data,
+        loading: false,
       });
     }
-  }
+  };
+
   handlerChange = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      inputResult: e.target.value,
+      inputResult: e.target.value.trim(),
     });
   };
 
-  handlerSearch = () => {
-    console.log(this.state.inputResult);
+  handlerSearch: () => void = async () => {
+    const { inputResult } = this.state;
+    localStorage.setItem('savedResult', inputResult);
+    await this.setStateResponse(inputResult);
   };
 
   render(): ReactNode {
+    const { data, loading, inputResult } = this.state;
     return (
       <main className={main}>
         <TopSection
           handlerChange={this.handlerChange}
           handlerSearch={this.handlerSearch}
+          valueResult={inputResult}
         />
-        <BottomSection
-          loadingState={this.state.loading}
-          data={this.state.data}
-        />
+        <BottomSection loadingState={loading} data={data} />
       </main>
     );
   }

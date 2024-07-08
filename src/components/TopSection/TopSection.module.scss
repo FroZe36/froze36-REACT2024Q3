@@ -14,5 +14,10 @@
   &__input {
     width: 400px;
     font-size: 25px;
+    padding: 5px 10px;
+    &::placeholder {
+      font-size: 18px;
+      text-align: center;
+    }
   }
 }
