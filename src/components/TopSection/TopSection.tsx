@@ -15,8 +15,11 @@ export class TopSection extends PureComponent<TopSectionProp> {
     const { handlerChange, handlerSearch } = this.props;
     return (
       <section className={topSection}>
-        <TopSectionInput onChange={handlerChange} className={topSection__input}/>
-        <TopSectionBtn onClick={handlerSearch} className={topSection__btn}/>
+        <TopSectionInput
+          onChange={handlerChange}
+          className={topSection__input}
+        />
+        <TopSectionBtn onClick={handlerSearch} className={topSection__btn} />
       </section>
     );
   }
