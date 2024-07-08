@@ -6,6 +6,7 @@ import {
   StarWarsService,
 } from '../../api/StarWarsService';
 import styleSearchPage from './SearchPage.module.scss';
+import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 const { main } = styleSearchPage;
 interface SearchPageState {
   inputResult: string;
@@ -59,14 +60,16 @@ export class SearchPage extends Component<
   render(): ReactNode {
     const { data, loading, inputResult } = this.state;
     return (
-      <main className={main}>
-        <TopSection
-          handlerChange={this.handlerChange}
-          handlerSearch={this.handlerSearch}
-          valueResult={inputResult}
-        />
-        <BottomSection loadingState={loading} data={data} />
-      </main>
+      <ErrorBoundary>
+        <main className={main}>
+          <TopSection
+            handlerChange={this.handlerChange}
+            handlerSearch={this.handlerSearch}
+            valueResult={inputResult}
+          />
+          <BottomSection loadingState={loading} data={data} />
+        </main>
+      </ErrorBoundary>
     );
   }
 }
