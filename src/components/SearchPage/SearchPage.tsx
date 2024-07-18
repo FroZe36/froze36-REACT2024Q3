@@ -1,4 +1,4 @@
-import { ChangeEvent, Component, ReactNode } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { TopSection } from '../TopSection/TopSection';
 import { BottomSection } from '../BottomSection/BottomSection';
 import {
@@ -7,69 +7,47 @@ import {
 } from '../../api/StarWarsService';
 import styleSearchPage from './SearchPage.module.scss';
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 const { main } = styleSearchPage;
-interface SearchPageState {
-  inputResult: string;
-  loading: boolean;
-  data: StarshipShortProperties[];
-}
 
-export class SearchPage extends Component<
-  Record<string, never>,
-  SearchPageState
-> {
-  state = {
-    inputResult: '',
-    loading: false,
-    data: [],
-  };
+export const SearchPage = () => {
+  const [loading, setLoading] = useState(false);
+  const [inputResult, setInputResult] = useState('');
+  const [data, setData] = useState<StarshipShortProperties[]>([]);
+  const [value, setValue] = useLocalStorage();
 
-  async componentDidMount() {
-    const savedResult = localStorage.getItem('savedResult') ?? '';
-    this.setState({
-      inputResult: savedResult,
-    });
-    await this.setStateResponse(savedResult);
-  }
-
-  setStateResponse = async (searchQuery: string) => {
-    this.setState({
-      loading: true,
-    });
-    const data = await StarWarsService.getResponse(searchQuery);
+  const setStateResponse = useCallback(async (searchQuery: string) => {
+    setLoading(true);
+    const data = await StarWarsService(searchQuery);
     if (data) {
-      this.setState({
-        data: data,
-        loading: false,
-      });
+      setData(data);
     }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    setInputResult(value);
+    setStateResponse(value).catch((err) => console.log(err));
+  }, [setStateResponse, value]);
+
+  const handlerChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputResult(e.target.value.trim());
   };
 
-  handlerChange = (e: ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      inputResult: e.target.value.trim(),
-    });
+  const handlerSearch = () => {
+    setValue(inputResult);
   };
 
-  handlerSearch: () => void = async () => {
-    const { inputResult } = this.state;
-    localStorage.setItem('savedResult', inputResult);
-    await this.setStateResponse(inputResult);
-  };
-
-  render(): ReactNode {
-    const { data, loading, inputResult } = this.state;
-    return (
-      <ErrorBoundary>
-        <main className={main}>
-          <TopSection
-            handlerChange={this.handlerChange}
-            handlerSearch={this.handlerSearch}
-            valueResult={inputResult}
-          />
-          <BottomSection loadingState={loading} data={data} />
-        </main>
-      </ErrorBoundary>
-    );
-  }
-}
+  return (
+    <ErrorBoundary>
+      <main className={main}>
+        <TopSection
+          handlerChange={handlerChange}
+          handlerSearch={handlerSearch}
+          valueResult={inputResult}
+        />
+        <BottomSection loadingState={loading} data={data} />
+      </main>
+    </ErrorBoundary>
+  );
+};

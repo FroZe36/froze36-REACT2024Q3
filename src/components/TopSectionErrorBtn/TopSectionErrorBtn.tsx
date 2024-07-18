@@ -1,30 +1,26 @@
-import { PureComponent, ReactNode } from 'react';
+import { FC, useState } from 'react';
 
-export class TopSectionErrorBtn extends PureComponent<
-  { className: string },
-  { error: boolean }
-> {
-  state = {
-    error: false,
+interface TopSectionErrorBtnProp {
+  className: string;
+}
+
+export const TopSectionErrorBtn: FC<TopSectionErrorBtnProp> = ({
+  className,
+}) => {
+  const [error, setError] = useState(false);
+
+  const handleClick = () => {
+    setError(true);
   };
 
-  handleClick = () => {
-    this.setState({
-      error: true,
-    });
-  };
-
-  render(): ReactNode {
-    const { className } = this.props;
-    if (this.state.error) {
-      throw new Error(
-        'The error eject by pressed the button, reload the page to continue!'
-      );
-    }
-    return (
-      <button className={className} type="button" onClick={this.handleClick}>
-        Throw error
-      </button>
+  if (error) {
+    throw new Error(
+      'The error eject by pressed the button, reload the page to continue!'
     );
   }
-}
+  return (
+    <button className={className} type="button" onClick={handleClick}>
+      Throw error
+    </button>
+  );
+};

@@ -29,30 +29,25 @@ export interface StarshipData {
   previous: null | string;
   results: StarshipShortProperties[];
 }
+const BASE_URL = 'https://swapi.dev/api/starships/';
+const method = 'GET';
+const body = null;
+const headers = { 'Content-type': 'application/json' };
 
-export class StarWarsService {
-  private static BASE_URL = 'https://swapi.dev/api/starships/';
-  private static method = 'GET';
-  private static body = null;
-  private static headers = { 'Content-type': 'application/json' };
-
-  static getResponse = async (searchParam: string | null = '') => {
-    const url = searchParam
-      ? `${this.BASE_URL}?search=${searchParam}`
-      : this.BASE_URL;
-    try {
-      const response = await fetch(url, {
-        method: this.method,
-        body: this.body,
-        headers: this.headers,
-      });
-      if (!response.ok) {
-        throw new Error(`Could not fetch ${url}, status: ${response.status}`);
-      }
-      const data = (await response.json()) as StarshipData;
-      return data.results;
-    } catch (error) {
-      console.error('Error:', error);
+export async function StarWarsService(searchParam: string | null = '') {
+  const url = searchParam ? `${BASE_URL}?search=${searchParam}` : BASE_URL;
+  try {
+    const response = await fetch(url, {
+      method,
+      body,
+      headers,
+    });
+    if (!response.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${response.status}`);
     }
-  };
+    const data = (await response.json()) as StarshipData;
+    return data.results;
+  } catch (error) {
+    console.error('Error fetch:', error);
+  }
 }

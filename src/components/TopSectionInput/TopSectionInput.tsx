@@ -1,4 +1,4 @@
-import { ChangeEvent, PureComponent, ReactNode } from 'react';
+import { ChangeEvent, FC } from 'react';
 
 interface TopSectionInputProp {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -6,17 +6,18 @@ interface TopSectionInputProp {
   valueResult: string;
 }
 
-export default class TopSectionInput extends PureComponent<TopSectionInputProp> {
-  render(): ReactNode {
-    const { onChange, className, valueResult } = this.props;
-    return (
-      <input
-        type="text"
-        onChange={onChange}
-        className={className}
-        placeholder="Write the name of starship or the model!"
-        value={valueResult}
-      />
-    );
-  }
-}
+export const TopSectionInput: FC<TopSectionInputProp> = ({
+  onChange,
+  className,
+  valueResult,
+}) => {
+  return (
+    <input
+      type="text"
+      onChange={onChange}
+      className={className}
+      placeholder="Write the name of starship or the model!"
+      value={valueResult}
+    />
+  );
+};

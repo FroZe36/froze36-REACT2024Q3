@@ -1,17 +1,17 @@
-import { PureComponent, ReactNode } from 'react';
+import { FC } from 'react';
 
 interface TopSectionBtnProp {
   onClick: () => void;
   className: string;
 }
 
-export class TopSectionBtn extends PureComponent<TopSectionBtnProp> {
-  render(): ReactNode {
-    const { onClick, className } = this.props;
-    return (
-      <button type="button" className={className} onClick={onClick}>
-        Search
-      </button>
-    );
-  }
-}
+export const TopSectionBtn: FC<TopSectionBtnProp> = ({
+  onClick,
+  className,
+}) => {
+  return (
+    <button type="button" className={className} onClick={onClick}>
+      Search
+    </button>
+  );
+};
