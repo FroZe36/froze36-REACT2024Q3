@@ -34,8 +34,20 @@ const method = 'GET';
 const body = null;
 const headers = { 'Content-type': 'application/json' };
 
-export async function StarWarsService(searchParam: string | null = '') {
-  const url = searchParam ? `${BASE_URL}?search=${searchParam}` : BASE_URL;
+export async function StarWarsService(
+  searchParam: string | null = '',
+  pageNum: number
+) {
+  let url;
+  if (searchParam && pageNum) {
+    url = `${BASE_URL}?search=${searchParam}&page=${pageNum}`;
+  } else if (searchParam) {
+    url = `${BASE_URL}?search=${searchParam}`;
+  } else if (pageNum) {
+    url = `${BASE_URL}?page=${pageNum}`;
+  } else {
+    url = BASE_URL;
+  }
   try {
     const response = await fetch(url, {
       method,
@@ -46,7 +58,7 @@ export async function StarWarsService(searchParam: string | null = '') {
       throw new Error(`Could not fetch ${url}, status: ${response.status}`);
     }
     const data = (await response.json()) as StarshipData;
-    return data.results;
+    return data;
   } catch (error) {
     console.error('Error fetch:', error);
   }
