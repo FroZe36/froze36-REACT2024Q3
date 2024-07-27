@@ -63,3 +63,21 @@ export async function StarWarsService(
     console.error('Error fetch:', error);
   }
 }
+
+export const StarWarsGetShip = async (name: string) => {
+  const url = `${BASE_URL}?search=${name}`;
+  try {
+    const response = await fetch(url, {
+      method,
+      body,
+      headers,
+    });
+    if (!response.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${response.status}`);
+    }
+    const data = (await response.json()) as StarshipData;
+    return data;
+  } catch (error) {
+    console.error('Error fetch:', error);
+  }
+};

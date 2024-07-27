@@ -1,5 +1,5 @@
 .bottomSection {
-  width: 100%;
+  width: 80%;
 }
 .title {
   font-size: 34px;
@@ -22,6 +22,9 @@
   display: flex;
   flex-direction: column;
   width: 300px;
+}
+button {
+  cursor: pointer;
 }
 .cardItem {
   text-align: left;

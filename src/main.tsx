@@ -8,6 +8,8 @@ import {
 } from 'react-router-dom';
 import NotFound from './components/NotFound/NotFound.tsx';
 import App from './App.tsx';
+import CardDetail from './components/CardDetail/CardDetail.tsx';
+// import { StarWarsGetShip } from './api/StarWarsService.ts';
 
 const router = createBrowserRouter([
   {
@@ -22,8 +24,8 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/page/:id/:name',
-        // loader: getAnimal,
-        // element: <CardDetail />,
+        element: <CardDetail />,
+        // loader: StarWarsGetShip,
         errorElement: <NotFound />,
       },
     ],

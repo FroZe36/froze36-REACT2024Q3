@@ -1,0 +1,13 @@
+.listCard {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+.buttonClose {
+  align-self: flex-end;
+}
+.cardItem {
+  text-align: left;
+  color: rgb(199, 64, 64);
+}

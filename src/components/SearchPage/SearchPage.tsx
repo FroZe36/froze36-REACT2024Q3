@@ -7,7 +7,7 @@ import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Pagination from '../Pagination/Pagination';
-const { main } = styleSearchPage;
+const { main, container } = styleSearchPage;
 
 export const SearchPage = () => {
   const [loading, setLoading] = useState(false);
@@ -57,17 +57,19 @@ export const SearchPage = () => {
           handlerSearch={handlerSearch}
           valueResult={inputResult}
         />
-        <div>
+        <div className={container}>
           <BottomSection
             loadingState={loading}
             data={data ? data.results : []}
           />
           <Outlet />
         </div>
-        <Pagination
-          next={data ? data.next : null}
-          prev={data ? data.previous : null}
-        />
+        {data?.results ? (
+          <Pagination
+            next={data ? data.next : null}
+            prev={data ? data.previous : null}
+          />
+        ) : null}
       </main>
     </ErrorBoundary>
   );

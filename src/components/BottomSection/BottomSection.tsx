@@ -2,8 +2,9 @@ import { FC } from 'react';
 import { Spinner } from '../spinner/spinner';
 import { StarshipShortProperties } from '../../api/StarWarsService';
 import styleBottomSection from './BottomSection.module.scss';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const { bottomSection, title, subtitle, list, listCard, cardItem } =
+const { bottomSection, title, subtitle, list, listCard, cardItem, list__li } =
   styleBottomSection;
 
 interface BottomSectionProps {
@@ -15,6 +16,8 @@ export const BottomSection: FC<BottomSectionProps> = ({
   loadingState,
   data,
 }) => {
+  const params = useParams<{ id: string }>();
+  const navigate = useNavigate();
   return (
     <section className={bottomSection}>
       <h1 className={title}>Starships from The Star Wars</h1>
@@ -26,14 +29,13 @@ export const BottomSection: FC<BottomSectionProps> = ({
         {loadingState ? (
           <Spinner />
         ) : (
-          data.map(({ name, model, manufacturer, length, consumables }, id) => (
-            <li key={id}>
+          data.map(({ name }, id) => (
+            <li key={id} className={list__li}>
               <ul className={listCard}>
                 <li className={cardItem}>The name: {name}</li>
-                <li className={cardItem}>The model: {model}</li>
-                <li className={cardItem}>The manufacturer: {manufacturer}</li>
-                <li className={cardItem}>The length: {length}</li>
-                <li className={cardItem}>Consumables: {consumables}</li>
+                <button onClick={() => navigate(`/page/${params.id}/${name}`)}>
+                  About
+                </button>
               </ul>
             </li>
           ))
